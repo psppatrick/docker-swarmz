@@ -1,0 +1,133 @@
+version: '3.5'
+
+networks:
+  driver: overlay
+  internal:
+    name: test_internal
+    internal: true
+  default:
+    name: media_net
+
+services:
+
+  plex:
+    image: linuxserver/plex
+    hostname: plex
+    container_name: plex
+    networks: 
+      - internal
+      - default
+    volumes:
+      - /mnt/media1/configs/plex/config:/config
+      - /mnt/media1/configs/plex/transcode:/transcode
+      - /mnt/media1/:/media:ro
+    ports:
+      - 32400:32400
+      - 32400:32400/udp
+      - 3005:3005
+      - 8324:8324
+      - 32469:32469
+      - 32469:32469/udp
+      - 1900:1900
+      - 1900:1900/udp
+      - 32410:32410
+      - 32410:32410/udp
+      - 32412:32412
+      - 32412:32412/udp
+      - 32413:32413
+      - 32413:32413/udp
+      - 32414:32414
+      - 32414:32414/udp
+    environment:
+      - PLEX_UID=1000
+      - PLEX_GID=1000
+      - TZ=Europe/London
+      - PLEX_CLAIM=""
+      - ADVERTISE_IP="10.0.6.17:32400"
+
+  qbittorrent:
+    image: linuxserver/qbittorrent
+    container_name: qbittorrent
+    ports:
+      - 8081:8081
+    networks:
+      - internal
+      - default
+    volumes:
+      - /mnt/media1/configs/qbittorrent:/config
+      - /mnt/media1/00000-To-Sort/:/downloads
+
+    environment:
+      - TZ=Europe/London
+      - PGID=1000
+      - PUID=1000
+      - WEBUI_PORT=8081
+
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    networks:
+      - internal
+      - default
+    ports:
+      - 9117:9117
+
+    volumes:
+      - /mnt/media1/configs/jackett:/config
+
+    environment:
+      - TZ=Europe/London
+      - PGID=1000
+      - PUID=1000
+
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    networks:
+      - internal
+      - default
+    ports:
+      - 7878:7878
+
+    volumes:
+      - /mnt/media1/configs/radarr:/config
+      - /mnt/media1/00000-To-Sort/:/downloads
+      - /mnt/media1/Movies/:/movies
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    networks:
+      - internal
+      - default
+    ports:
+      - 8989:8989
+    volumes:
+      - /mnt/media1/configs/sonarr:/config
+      - /mnt/media1/00000-To-Sort/:/downloads
+      - /mnt/media1/TV/:/tv
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London
+
+  lidarr:
+    image: linuxserver/lidarr
+    container_name: lidarr
+    networks:
+      - internal
+      - default
+    ports:
+      - 8686:8686
+    volumes:
+      - /mnt/media1/configs/lidarr:/config
+      - /mnt/media1/00000-To-Sort/:/downloads
+      - /mnt/media1/Music:/music
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/London      

@@ -19,13 +19,14 @@ services:
       - /mnt/configs/plex/config/:/config
       - /mnt/configs/plex/transcode/:/transcode
       - /mnt/media1/:/media
+      - /mnt/media0/:/media0
     ports:
       - 32400:32400
       - 32400:32400/udp
     environment:
       - PLEX_UID=1000
       - PLEX_GID=1000
-      - PLEX_CLAIM="[PLEX CLAIM HERE]"
+      - PLEX_CLAIM="[PLEX CLAIM TOKEN HERE]"
       - TZ=Europe/London
       - ADVERTISE_IP="10.0.6.17:32400"
       - "constraint:node==atlantis"
@@ -73,6 +74,7 @@ services:
       - /mnt/configs/radarr/:/config
       - /mnt/media1/00000-To-Sort/:/downloads
       - /mnt/media1/Movies/:/movies
+      - /mnt/media0/:/media0
       - /trash-can/:/recyclebin
     environment:
       - PUID=1000
@@ -91,6 +93,7 @@ services:
       - /mnt/configs/sonarr/:/config
       - /mnt/media1/00000-To-Sort/:/downloads
       - /mnt/media1/TV/:/tv
+      - /mnt/media0/:/media0
       - /trash-can/:/recyclebin
     environment:
       - PUID=1000
@@ -109,6 +112,7 @@ services:
       - /mnt/configs/lidarr/:/config
       - /mnt/media1/00000-To-Sort/:/downloads
       - /mnt/media1/Music:/music
+      - /mnt/media0/:/media0
       - /trash-can/:/recyclebin
     environment:
       - PUID=1000
